@@ -1,0 +1,4 @@
+filmPhaseChangeToFluid.C
+fluidPhaseChangeToFilm.C
+
+LIB = $(FOAM_USER_LIBBIN)/libfilmPhaseChangeToFluid

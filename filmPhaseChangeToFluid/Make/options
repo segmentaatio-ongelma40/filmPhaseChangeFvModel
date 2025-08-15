@@ -1,0 +1,35 @@
+EXE_INC = \
+    -I$(LIB_SRC)/fvModels/general/lnInclude \
+    -I$(LIB_SRC)/OpenFOAM/lnInclude \
+    \
+    -I$(FOAM_MODULES)/isothermalFilm/lnInclude \
+    -I$(FOAM_MODULES)/isothermalFilm/filmCompressibleMomentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/physicalProperties/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
+    \
+    -I$(FOAM_MODULES)/isothermalFluid/lnInclude \
+    -I$(FOAM_MODULES)/multicomponentFluid/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/thermophysicalProperties/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/multicomponentThermo/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
+    -I$(LIB_SRC)/combustionModels/lnInclude \
+    -I$(LIB_SRC)/ThermophysicalTransportModels/fluidMulticomponentThermo/lnInclude \
+    -I$(LIB_SRC)/ThermophysicalTransportModels/fluid/lnInclude \
+    -I$(FOAM_MODULES)/fluidSolver/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/phaseCompressible/lnInclude \
+    -I$(LIB_SRC)/ThermophysicalTransportModels/thermophysicalTransportModel/lnInclude \
+    \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+
+LIB_LIBS = \
+    -lOpenFOAM \
+    -lmulticomponentFluid \
+    -lisothermalFilm \
+    -lthermophysicalProperties
