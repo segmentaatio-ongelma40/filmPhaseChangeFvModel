@@ -6,7 +6,9 @@ used for modelling liquid wall film phase-change in multi-region cases.
 
 Port of the *standardPhaseChange* model from OpenFOAM-10.
 
-I created this model originally for my master's thesis, and I'm sharing it here in case somebody finds it useful. However, note that the model is under development and has several limitations/inaccuracies (listed in Section [5](#5-known-limitations)).
+I created this model originally for my master's thesis, and I'm sharing it here in case somebody 
+finds it useful. The code still needs some clean-up, and has several limitations/inaccuracies, as
+listed in [Section 5](#5-known-limitations).  
 
 ## 1. Technical description
 
@@ -23,7 +25,8 @@ this model is based upon. The phase change code is based on the OpenFOAM-10 wall
 The model considers two modes of wall film phase change: evaporation and boiling.
 Evaporation is modelled using convective mass transfer coefficient 
 correlations. Boiling is modelled using estimations of available heat
-flux. Condensation is not supported.
+flux. Latent heat of vaporisation is calculated using the enthalpy difference method 
+($\Delta h_{lat}=h_a(g)-h_a(l)$)
 
 The *filmPhaseChangeToFluid* fvModel is applied to the film region(s). It calculates the phase change rate
 and applies the mass and energy source terms. <ins>Only single-specie films are supported</ins>, limited
@@ -58,28 +61,28 @@ source /path/to/OpenFOAM/etc/bashrc
 wmake
 ```
 
-The resulting library, **filmPhaseChangeToFluid.so** will be located at the 
-directory given by the environment variable **$WM_USER_LIBBIN**.
+The resulting library, **libfilmPhaseChangeToFluid.so** will be located at the 
+directory given by the environment variable **$FOAM_USER_LIBBIN**.
 
 ### 2.2 Linux, OpenFOAM installed from repository (e.g., using apt)
 
 **TODO**
 I do not have personal experience about this, but I assume that
-the instructions of Section [2.1](#21-linux-compiled-openfoam)
+the instructions of [Section 2.1](#21-linux-compiled-openfoam)
 should apply here, if the necessary packages for compilation are installed.
 
 ### 2.3 Linux, high-performance computing clusters
 
 Depending on the cluster, packages necessary for compilation may be available as loadable modules.
 In that case, load them and follow the instructions in 
-Section [2.1](#21-linux-compiled-openfoam) or [2.2](#22-linux-installed-openfoam-eg-from-apt-repositories).
+[Section 2.1](#21-linux-compiled-openfoam) or [Section 2.2](#22-linux-installed-openfoam-eg-from-apt-repositories).
 
 
 ### 2.4 Windows (WSL)
 
 **TODO**
 if using WSL (Windows Subsystem for Linux) to run OpenFOAM, 
-Sections [2.1](#21-linux-compiled-openfoam) and [2.2](#22-linux-installed-openfoam-eg-from-apt-repositories)
+[Section 2.1](#21-linux-compiled-openfoam) and [Section 2.2](#22-linux-installed-openfoam-eg-from-apt-repositories)
 should apply here.
 
 ## 3. Usage
@@ -87,6 +90,7 @@ should apply here.
 The models are declared in the fvModels file (located at
 */constant/\<regionname\>/fvModels*). 
 See the test case for examples.
+The library (libfilmPhaseChangeToFluid.so) needs to be included via the 'libs' argument.
 
 Example declarations:
 ```
@@ -126,7 +130,8 @@ Available options:
 Option | required | default value | description
 ------ | -------- | ------------- | -----------
 activeLiquid | yes |    | The liquid species the film consists of (e.g., IC8H18, CH3OH, H2O). <ins>Currently only supports single-specie liquids</ins>.
-overrideLRef | no | false | Switch. If set true, states that an user-defined *L* for *Re* and *Sh* equations should be used, defined in the LRef entry. If set false, *L* will be calculated from $L = V_{film} / A_{film}$ on each time-step.
+overrideLRef | no | false | Switch. If set true, states that an user-defined *L* in evaporation 
+*Re* and *Sh* equations should be used, defined in the 'LRef' entry. If set false, *L* will be calculated from $L = V_{film} / A_{film}$ on each time-step.
 LRef | no |             | If 'overrideLRef' is set true, use this value for *L*. 
 deltaMin | no | 1e-13   | Minimum film thickness $\delta$, beyond which the phase change model activates. Cells with film thickness less than this are not considered wetted, and phase change is not calculated for them.
 debug | no | false | Switch for printing increased debug information.
@@ -136,7 +141,7 @@ debug | no | false | Switch for printing increased debug information.
 
 Option | required | default value | description
 ------ | -------- | ------------- | -----------
-patches | yes |    | List of patch names, corresponding to the names of the surface patches of the coupled film surfaces.
+patches | yes |    | List of patch name(s), corresponding to the name(s) of the coupled film surface patch(es).
 coupled | no  | true | Switch. If set false, no source terms are applied to this region.
 requireNbrModel | no | true | Switch. If set true, forces an error if no *filmPhaseChangeToFluid* model is found in one or more of the coupled film regions defined by the 'patches' entry. If set false, the model will log warning and ignore the region.
 
