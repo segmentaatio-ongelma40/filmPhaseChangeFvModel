@@ -1,0 +1,58 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  10
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// PIMPLE
+PIMPLE
+{
+    nOuterCorrectors       25;
+    nCorrectors            2;
+    turbOnFinalIterOnly    false;
+    nNonOrthogonalCorrectors 1;
+    momentumPredictor      yes;
+}
+
+/*
+// PISO
+PIMPLE
+{
+    nCorrectors            3;
+    turbOnFinalIterOnly    true;
+    nNonOrthogonalCorrectors 1;
+    momentumPredictor      yes;
+}
+*/
+
+relaxationFactors
+{
+    fields
+    {   
+        "(p|p_rgh)" 0.7;
+        U           0.9;
+        k           0.5;
+        omega       0.5;
+    }
+
+    equations
+    {   
+        "(p|p_rgh)" 0.7;
+        U           0.9;
+        k           0.5;
+        omega       0.5;
+    }
+}
+
+
+// ************************************************************************* //

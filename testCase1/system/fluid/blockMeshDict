@@ -1,0 +1,101 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format          ascii;
+    class           dictionary;
+    object          blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 0.001;
+
+x0              0;
+
+x1              55;
+
+y0              -20.5;
+
+y1              20.5;
+
+z0              -137;
+
+z1              137;
+
+vertices        
+( 
+    ( $x0 $y0 $z0 ) 
+    ( $x0 $y1 $z0 ) 
+    ( $x1 $y0 $z0 ) 
+    ( $x1 $y1 $z0 ) 
+    ( $x0 $y0 $z1 ) 
+    ( $x0 $y1 $z1 ) 
+    ( $x1 $y0 $z1 ) 
+    ( $x1 $y1 $z1 ) 
+);
+
+// cell edge length
+LCell             1.830;
+
+Nx                #calc "round(($x1-$x0)/$LCell)";
+Ny                #calc "round(($y1-$y0)/$LCell)";
+Nz                #calc "round(($z1-$z0)/$LCell)";
+
+//M               1.5;
+//Nx              #calc "round(10*$M)";
+//Ny              #calc "round($Nx*(41.0/55.0))";
+//Nz              #calc "round($Nx*(274.0/55.0))";
+
+blocks          
+( 
+    hex ( 0 2 3 1 4 6 7 5 ) ( $Nx $Ny $Nz ) simpleGrading ( 1 1 1 ) 
+);
+
+boundary        
+( 
+    top 
+    {
+        type patch ; 
+        faces 
+        ( 
+            ( 4 6 7 5 ) 
+        ); 
+    } 
+    film 
+    { 
+        type mappedExtrudedWall ; 
+        neighbourRegion film ; 
+        neighbourPatch surface ; 
+        isExtrudedRegion no ; 
+        faces 
+        (
+            ( 2 3 7 6 )
+        ); 
+    } 
+    walls 
+    { 
+        type wall ; 
+        faces 
+        ( 
+            ( 0 4 5 1 ) 
+            ( 0 2 6 4 ) 
+            ( 1 5 7 3 ) 
+        ); 
+    } 
+    bottom 
+    {
+        type patch ; 
+        faces 
+        ( 
+            ( 0 1 3 2 ) 
+        ); 
+    }
+);
+
+
+// ************************************************************************* //

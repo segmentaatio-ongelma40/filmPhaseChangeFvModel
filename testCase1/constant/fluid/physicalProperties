@@ -1,0 +1,457 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      physicalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+thermoType
+{
+    type            heRhoThermo;
+    mixture         multicomponentMixture;
+    transport       sutherland;
+    thermo          janaf;
+    equationOfState perfectGas;
+    specie          specie;
+    energy          sensibleEnthalpy;
+}
+
+//- participating species
+species
+(
+    O2
+    N2
+    CH3OH
+    IC8H18
+);
+
+/** 
+ * ################# References used: ####################
+ *
+ * - Thermodynamics polynomials (CH3OH, IC8H18, O2, N2) --
+ * McBride B.J., Gordon S., Reno M.A. 
+ * "Coefficients for calculating thermodynamic 
+ * and transport properties of individual 
+ * species" (1993) NASA Technical Memorandum 4513.
+ * 
+ * -------------------------------------------------------
+ *
+ * ------- Transport polynomials (CH3OH, O2, N2) ---------
+ * Smith, G.P. et al., "GRI-MECH 3.0" (1999) University of
+ * California, Berkeley. 
+ * http://combustion.berkeley.edu/gri-mech/version30/text30.html
+ * 
+ * -------------------------------------------------------
+ *
+ * --------- Transport polynomials (IC8H18) --------------
+ * Toluene Primary Reference Fuels (TPRF) HT + LT +
+ * Alcohols mechanism (Version 2003, March 2020):
+ * 
+ * Ranzi, E., Frassoldati, A., Stagni, A., Pelucchi, 
+ * M., Cuoci, A., Faravelli, T., "Reduced kinetic 
+ * schemes of complex reaction systems: Fossil and 
+ * biomass-derived transportation fuels" (2014) 
+ * International Journal of Chemical Kinetics, 
+ * 46 (9), pp. 512-542, DOI: 10.1002/kin.20867
+ *
+ * Ranzi, E., Cavallotti, C., Cuoci, A., Frassoldati, 
+ * A., Pelucchi, M., Faravelli, T., "New reaction 
+ * classes in the kinetic modeling of low temperature 
+ * oxidation of n-alkanes" (2015) Combustion and Flame, 
+ * 162 (5), pp. 1679-1691, 
+ * DOI: 10.1016/j.combustflame.2014.11.030
+ *
+ * Bagheri, G., Ranzi, E., Pelucchi, M., Parente, A., 
+ * Frassoldati, A., Faravelli, T., "Comprehensive 
+ * kinetic study of combustion technologies for low 
+ * environmental impact: MILD and OXY-fuel combustion 
+ * of methane" (2020) Combustion and Flame 212, 
+ * pp. 142-155, DOI: 10.1016/j.combustflame.2019.10.014
+ * 
+ * -------------------------------------------------------
+ */
+
+CH3OH
+{
+    specie
+    {
+ 	    molWeight   32.0422;	
+    }
+    thermodynamics
+    {
+        Tlow        200;
+	    Thigh       6000;
+	    Tcommon     1000;
+	    highCpCoeffs
+        (
+             3.60134
+             1.02430e-02
+            -3.59986e-06
+             5.72506e-10
+            -3.39118e-14
+            -2.59972e+04
+             4.70512
+        );
+	    lowCpCoeffs
+        (
+             5.71540
+             -1.52309e-02
+             6.52441e-05
+             -7.10807e-08
+             2.61353e-11
+             -2.56427e+04
+             -1.50410
+        );
+    }
+    transport 
+    {
+        As      1.5144386708485804e-06;
+        Ts      531.1301555145715;
+        muLogCoeffs<8>          
+        (
+            -22.4662183775120
+            2.865818307047548
+            -0.1919817209523320
+            0.00441717857612218
+            0 
+            0 
+            0 
+            0  
+            );
+        muCoeffs<8>             
+        (       
+            -1.6843423456098088e-06 
+            4.031895707904944e-08 
+            -8.380274346428951e-12 
+            1.000543645595839e-15 
+            0 
+            0 
+            0 
+            0  
+            );
+        kappaLogCoeffs<8>       
+        (       
+            -12.10158382444693 
+            0.0037592358705648686 
+            0.431933188383813 
+            -0.032442236054515745 
+            0 
+            0 
+            0 
+            0  
+            );
+	    kappaCoeffs<8>          
+        (       
+            -0.03255983783198312 
+            0.00014921050754658662 
+            3.593883232868385e-09 
+            -3.3224228062916548e-12 
+            0 
+            0 
+            0 
+            0  
+        );
+    }
+    elements
+    {
+	    O       1;
+	    H       4;
+	    C       1;
+    }
+}
+
+IC8H18
+{
+    specie
+    { 
+        // (NIST, 2023)
+
+        molWeight       114.229;
+    }
+
+    thermodynamics
+    {   
+        // (McBride, Gordon, Reno, 1993)
+
+        Tlow            200;
+        Thigh           6000;
+        Tcommon         1000;
+        highCpCoeffs    
+        (
+            1.59899273e+01 
+            5.53184790e-02 
+            -1.95267072e-05 
+            3.11779172e-09 
+            -1.85312577e-13 
+            -3.58757973e+04 
+            -6.01161414e+01
+        );
+        lowCpCoeffs     
+        (
+            8.15737338e-01 
+            7.32643959e-02
+            1.78300688e-05
+            -6.93589620e-08 
+            3.32629382e-11 
+            -3.04772862e+04 
+            2.41509994e+01
+        );
+    }
+
+    transport
+    {
+        As  9.862049731754878e-07;
+        Ts  541.8638713329682;
+        muLogCoeffs<8>  
+        (
+            -22.136160792911898 
+            2.5171241431023637
+            -0.14017126546826458 
+            0.001899386108063954 
+            0 
+            0 
+            0 
+            0  
+        );
+        muCoeffs<8> 
+        (
+            -1.106045671293278e-06
+            2.5945535793572906e-08
+            -5.244669575193528e-12
+            6.081486008435551e-16
+            0
+            0
+            0
+            0
+        );
+        kappaLogCoeffs<8>   
+        (
+            -33.26038494771674 
+            8.984282614273203 
+            -0.8428272681092036 
+            0.02772717738930544 
+            0 
+            0 
+            0 
+            0  
+        );
+        kappaCoeffs<8>  
+        (
+            -0.028165333864047102
+            0.00012854992167126586
+            5.350706389710817e-09
+            -3.0760439165560225e-12
+            0
+            0
+            0
+            0
+        );
+    }
+
+    elements
+    {
+        C     8;
+        H     18;
+    }
+}
+
+N2
+{
+    specie
+    {
+        molWeight       28.0135;        
+    }
+    thermodynamics
+    {
+        Tlow            200;
+        Thigh           6000;
+        Tcommon         1000;
+        highCpCoeffs
+        (
+            2.95258
+            1.39690e-03
+            -4.92632e-07
+            7.86010e-11
+            -4.60755e-15
+            -9.23949e+02
+            5.87189
+        );
+        lowCpCoeffs
+        (
+            3.53101
+            -1.23661e-04
+            -5.02999e-07
+            2.43531e-09
+            -1.40881e-12
+            -1.04698e+03
+            2.96747
+        );
+    }
+    transport 
+    {
+	    As      1.63125383286385e-06;
+	    Ts      226.83801454492146;
+	    muLogCoeffs<8>          
+        (       
+            -18.971016836901477 
+            2.434189655117567 
+            -0.24092674528856894 
+            0.010810549948903021 
+            0 
+            0 
+            0 
+            0  
+        );
+	    muCoeffs<8>             
+        (       
+            6.69437705312452e-06 
+            4.277929570876159e-08 
+            -9.24694253123274e-12 
+            1.2233127665681972e-15 
+            0 
+            0 
+            0 
+            0  
+        );
+	    kappaLogCoeffs<8>       
+        (       
+            1.1178331988836416 
+            -3.398665160229863 
+            0.6269589281010576 
+            -0.031058033297435957 
+            0 
+            0 
+            0 
+            0  
+        );
+	    kappaCoeffs<8>          
+        (       
+            0.005750221711547744 
+            7.047165059470647e-05 
+            -8.091852492247559e-09 
+            5.23546490848572e-13 
+            0 
+            0 
+            0 
+            0  
+        );
+    }
+    elements
+    {
+	    N       2;
+    }      
+}
+
+O2
+{
+    specie
+    {
+        molWeight       31.9988;        
+    }
+    thermodynamics
+    {
+        Tlow            200;
+        Thigh           6000;
+        Tcommon         1000;
+        highCpCoeffs
+        (
+            3.66096
+            6.56365e-04
+            -1.41149e-07
+            2.05798e-11
+            -1.29913e-15
+            -1.21598e+03
+            3.41536
+        );
+        lowCpCoeffs
+        (
+            3.78246
+            -2.99673e-03
+            9.84730e-06
+            -9.68130e-09
+            3.24373e-12
+            -1.06394e+03
+            3.65768
+        );
+    }
+    transport 
+    {
+	    As      1.8881732673440348e-06;
+	    Ts      230.91484889294554;
+	    muLogCoeffs<8>          
+        (       
+            -19.536662783184784 
+            2.7136345825193318 
+            -0.2776107027000222 
+            0.01241702523955422 
+            0 
+            0 
+            0 
+            0  
+        );
+	    muCoeffs<8>             
+        (       
+            7.379218882404887e-06 
+            4.996837368988732e-08 
+            -1.0949306713412201e-11 
+            1.4559080179376586e-15 
+            0 
+            0 
+            0 
+            0  
+        );
+	    kappaLogCoeffs<8>       
+        (       
+            -13.048279597077956 
+            2.7195724062798936 
+            -0.24680360036351023 
+            0.01039202498940327 
+            0 
+            0 
+            0 
+            0  
+        );
+	    kappaCoeffs<8>          
+        (       
+            0.002627431809224828 
+            8.474195930668298e-05 
+            -1.628134820137921e-08 
+            2.324689268267485e-12 
+            0 
+            0 
+            0 
+            0  
+        );
+    }
+
+    elements
+    {
+	    O   2;
+    }       
+}
+
+//- other settings
+newFormat           yes;
+defaultSpecie       N2;
+
+liquids
+{
+    CH3OH;
+    IC8H18;
+}
+
+solids
+{}
+
+
+
+// ************************************************************************* //

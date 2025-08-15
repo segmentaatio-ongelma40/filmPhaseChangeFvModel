@@ -1,0 +1,169 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format          ascii;
+    class           dictionary;
+    location        "system";
+    object          functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+fileUpdate1
+{
+    type            timeActivatedFileUpdate;
+    
+    libs            ("libutilityFunctionObjects.so")
+
+    writeControl    timeTime;
+    writeInterval   1;
+    fileToUpdate    "$FOAM_CASE/system/controlDict";
+    fileVsTime
+    (
+        (-1 "$FOAM_CASE/system/controlDict.0")
+        (0.004 "$FOAM_CASE/system/controlDict.1")
+    );
+}
+rhoAlpha
+{
+    type            multiply;
+    libs            ( "libfieldFunctionObjects.so" );
+    fields          ( rho alpha );
+    result          rhoAlpha;
+    writeFields     no;
+    executeControl  timeStep;
+    executeInterval 1;
+    writeControl    writeTime;
+    writeInterval   1;
+    region          film;
+}
+rhoYIC8H18
+{
+    type            multiply;
+    libs            ( "libfieldFunctionObjects.so" );
+    fields          ( rho IC8H18 );
+    result          rhoYIC8H18;
+    writeFields     no;
+    executeControl  timeStep;
+    executeInterval 1;
+    writeControl    writeTime;
+    writeInterval   1;
+    region          fluid;
+}
+massvIC8H18
+{
+    type            volFieldValue;
+    libs            ( "libfieldFunctionObjects.so" );
+    executeControl  runTime;
+    executeInterval 0.01;
+    writeControl    runTime;
+    writeInterval   0.01;
+    log             yes;
+    writeFields     no;
+    select          all;
+    region          fluid;
+    surfaceFormat   none;
+    operation       volIntegrate;
+    fields          ( rhoYIC8H18 );
+}
+massvTotal
+{
+    type            volFieldValue;
+    libs            ( "libfieldFunctionObjects.so" );
+    executeControl  runTime;
+    executeInterval 0.01;
+    writeControl    runTime;
+    writeInterval   0.01;
+    log             yes;
+    writeFields     no;
+    select          all;
+    region          fluid;
+    surfaceFormat   none;
+    operation       volIntegrate;
+    fields          ( rho );
+}
+volumeIntegral
+{
+    type            volFieldValue;
+    libs            ( "libfieldFunctionObjects.so" );
+    executeControl  runTime;
+    executeInterval 0.01;
+    writeControl    runTime;
+    writeInterval   0.01;
+    log             yes;
+    writeFields     no;
+    region          film;
+    cellZone        film6;
+    operation       volIntegrate;
+    fields          ( rhoAlpha );
+}
+
+cuttingPlanes
+{
+    type            surfaces;
+    libs            ( "libsampling.so" );
+    surfaceFormat   vtk;
+    executeControl  adjustableRunTime;
+    executeInterval 0.01;
+    writeControl    adjustableRunTime;
+    writeInterval   0.01;
+    region          fluid;
+    interpolationScheme cell;
+    fields          ( p p_rgh T U IC8H18 O2 N2 k omega nut );
+    surfaces        
+    ( 
+        yNormal 
+        { 
+            type cuttingPlane ; 
+            planeType pointAndNormal ; 
+            point ( 0 0 0 ) ; 
+            normal ( 0 1 0 ) ; 
+            interpolate true ;
+        } 
+        xNormalPlate 
+        {
+            type cuttingPlane ; 
+            planeType pointAndNormal ; 
+            point ( 0.0545 0 0 ) ; 
+            normal ( 1 0 0 ) ; 
+            interpolate true ;
+        }
+    );
+}
+rhoMax
+{
+    type            volFieldValue;
+    libs            ( "libfieldFunctionObjects.so" );
+    writeControl    writeTime;
+    executeControl  runTime;
+    executeInterval 1;
+    writeControl    writeTime;
+    writeInterval   1;
+    log             yes;
+    writeFields     yes;
+    region          film;
+    cellZone        film6;
+    operation       max;
+    fields          ( rho );
+}
+/*
+yPlusFilm6
+{
+    type            yPlus;
+    libs            ( "libfieldFunctionObjects.so" );
+    
+    writeControl    adjustableRunTime;
+    writeInterval   0.01;
+    executeControl  adjustableRunTime;
+    executeInterval 0.01;
+    objects         (); // do not write the field
+
+    faceZone        film6;
+    region          fluid;
+}
+*/

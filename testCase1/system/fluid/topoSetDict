@@ -1,0 +1,58 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    // --- Film face set for film region extrusion --- \\
+    
+    {
+        name    filmFaceSet;
+        type    faceSet;
+        action  new;
+        source  patchToFace;
+        patch   film;
+    }
+    {
+        name    filmFaceZone;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        faceSet filmFaceSet;
+    }
+
+    // --- isolate film 6 --- \\
+
+    {
+        name    film6;
+        type    faceSet;
+        action  new;
+        source  boxToFace;
+        boxes
+        (
+            (54.99e-3   0.01e-3 -32.01e-3)
+            (55.01e-3  20.51e-3  -3.99e-3)
+        );
+    }
+    {
+        name    film6;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        faceSet film6;
+    }
+);
+
+// ************************************************************************* //

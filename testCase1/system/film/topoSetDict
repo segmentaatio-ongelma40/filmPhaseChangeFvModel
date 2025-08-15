@@ -1,0 +1,41 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  10
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    // --- isolate film 6 --- \\
+
+    {
+        name    film6;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        boxes
+        (
+            (50.99e-3   0.01e-3 -32.01e-3)
+            (60.01e-3  20.51e-3  -3.99e-3)
+        );
+    }
+    {
+        name    film6;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        set film6;
+    }
+);
+
+// ************************************************************************* //

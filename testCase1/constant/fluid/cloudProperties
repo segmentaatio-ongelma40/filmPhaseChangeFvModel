@@ -1,0 +1,192 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format          ascii;
+    class           dictionary;
+    location        "constant";
+    object          cloudProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type            sprayCloud;
+
+libs            ( "libfilmCloudTransfer.so" );
+
+cpuLoad         true;
+
+solution
+{
+    coupled         yes;
+    transient       yes;
+    cellValueSourceCorrection no;
+    maxCo           0.3;
+    sourceTerms
+    {
+        schemes
+        {
+            rho             semiImplicit 1;
+            U               semiImplicit 1;
+            Yi              semiImplicit 1;
+            h               semiImplicit 1;
+            radiation       semiImplicit 1;
+        }
+    }
+    interpolationSchemes
+    {
+        rho             cell;
+        U               cellPoint;
+        thermo:mu       cell;
+        T               cell;
+        Cp              cell;
+        thermo:kappa    cell;
+        p               cell;
+        mu              cell;
+        kappa           cell;
+    }
+    integrationSchemes
+    {
+        U               Euler;
+        T               analytical;
+    }
+}
+
+constantProperties
+{
+    rho0            690;
+    T0              300;
+    Cp0             1649;
+    constantVolume  false;
+}
+
+subModels
+{
+    particleForces
+    {
+        sphereDrag      ;
+        gravity         ;
+    }
+    injectionModels
+    {
+        injector1
+        {
+	        type            coneInjection;
+            injectionMethod disc;
+            SOI             0.0005;
+            duration        0.0005;
+            massTotal       7.667e-07;
+            uniformParcelSize volume;
+            nParcels        100000;
+            parcelsPerSecond #calc "$nParcels / ($duration*6)";
+            flowRateProfilesSubdict
+            {
+                constant        constant 1;
+                linear          table ( ( 0 0 ) ( 0.00125 1 ) ( 0.0025 0 ) ( 9000 0 ) );
+                sine            table ( ( 0 0 ) ( 0.000131579 0.0270914 ) ( 0.000263158 0.10543 ) ( 0.000394737 0.226526 ) ( 0.000526316 0.377257 ) ( 0.000657895 0.54129 ) ( 0.000789474 0.700848 ) ( 0.000921053 0.838641 ) ( 0.00105263 0.939737 ) ( 0.00118421 0.993181 ) ( 0.00131579 0.993181 ) ( 0.00144737 0.939737 ) ( 0.00157895 0.838641 ) ( 0.00171053 0.700848 ) ( 0.00184211 0.54129 ) ( 0.00197368 0.377257 ) ( 0.00210526 0.226526 ) ( 0.00223684 0.10543 ) ( 0.00236842 0.0270914 ) ( 0.00251 0 ) ( 9000 0 ) );
+            }
+            flowRateProfile $flowRateProfilesSubdict/constant;
+            sizeDistribution
+            {
+                type            RosinRammler;
+                Q               0;
+                max             0.001;
+                min             1e-07;
+                d               6.0819e-05;
+                n               7;
+            }
+            position        ( 0.0001 0 0 );
+            direction       ( 0.855 -0.218 0.469 );
+            thetaInner      0;
+            thetaOuter      8;
+            dInner          0;
+            dOuter          0.0005;
+            flowType        pressureDrivenVelocity;
+            Pinj            1e+07;
+        }
+        injector2
+        {
+            $injector1      ;
+            direction       ( 0.855 0.218 0.469 );
+        }
+        injector3
+        {
+            $injector1      ;
+            direction       ( 0.91 -0.415 0.131 );
+        }
+        injector4
+        {
+            $injector1      ;
+            direction       ( 0.91 0.415 0.131 );
+        }
+        injector5
+        {
+            $injector1      ;
+            direction       ( 0.937 -0.239 -0.275 );
+        }
+        injector6
+        {
+            $injector1      ;
+            direction       ( 0.937 0.239 -0.275 );
+        }
+    }
+    atomisationModel none;
+    breakupModel    ReitzDiwakar;
+    ReitzDiwakarCoeffs
+    {
+        solveOscillationEq yes;
+        Cbag            6;
+        Cb              0.785;
+        Cstrip          0.5;
+        Cs              10;
+    }
+    dispersionModel none;
+    patchInteractionModel standardWallInteraction;
+    standardWallInteractionCoeffs
+    {
+        type            rebound;
+    }
+    heatTransferModel RanzMarshall;
+    BirdCorrection  true;
+    compositionModel singlePhaseMixture;
+    singlePhaseMixtureCoeffs
+    {
+        phases          ( liquid { IC8H18 1 ; } );
+    }
+    phaseChangeModel liquidEvaporationBoil;
+    liquidEvaporationBoilCoeffs
+    {
+        enthalpyTransfer latentHeat;
+        activeLiquids   ( IC8H18 );
+    }
+    stochasticCollisionModel none;
+    TABCoeffs
+    {
+        y0              0;
+        yDot0           0;
+        Cmu             10;
+        Comega          8;
+        WeCrit          12;
+    }
+    surfaceFilmModel cloudFilmTransfer;
+    cloudFilmTransferCoeffs
+    {
+        interactionType splashBai;
+        deltaWet        1e-06;
+        Adry            2630;
+        Awet            1320;
+        Cf              0.7;
+    }
+    radiation       off;
+}
+
+cloudFunctions
+{
+}
+
+
+// ************************************************************************* //
