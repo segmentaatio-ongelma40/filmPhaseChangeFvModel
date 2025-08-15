@@ -130,8 +130,7 @@ Available options:
 Option | required | default value | description
 ------ | -------- | ------------- | -----------
 activeLiquid | yes |    | The liquid species the film consists of (e.g., IC8H18, CH3OH, H2O). <ins>Currently only supports single-specie liquids</ins>.
-overrideLRef | no | false | Switch. If set true, states that an user-defined *L* in evaporation 
-*Re* and *Sh* equations should be used, defined in the 'LRef' entry. If set false, *L* will be calculated from $L = V_{film} / A_{film}$ on each time-step.
+overrideLRef | no | false | Switch. If set true, states that an user-defined *L* in evaporation *Re* and *Sh* equations should be used, defined in the 'LRef' entry. If set false, *L* will be calculated from $L = V_{film} / A_{film}$ on each time-step.
 LRef | no |             | If 'overrideLRef' is set true, use this value for *L*. 
 deltaMin | no | 1e-13   | Minimum film thickness $\delta$, beyond which the phase change model activates. Cells with film thickness less than this are not considered wetted, and phase change is not calculated for them.
 debug | no | false | Switch for printing increased debug information.
