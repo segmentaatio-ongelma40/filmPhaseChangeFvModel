@@ -165,9 +165,8 @@ The model logs:
 
 * 100 bar injection of iso-octane against a 300 K heated plate.
 * Initial mass over-predicted possibly due to spray parameter choices.
-* Agreeable evaporation rate results at medium grid resolution. Under-prediction observed
-at finer resolutions.
-* A relatively heavy case; should run fine on 32-128 CPUs.
+* Agreeable evaporation rate results at medium grid resolution. Under-prediction observed at finer resolutions.
+* On 4 CPUs, the runtime with the 1.830 mm mesh should be around 1 hour.
 * Jüngst N., Frapolli N., Wright Y.M., Boulouchos K., Kaiser S.A., 2021.
 "Experimental and numerical investigation of evaporating fuel films in 
 combustion". Applications in Energy and Combustion Science. 7. [doi.org/10.1016/j.jaecs.2021.100033](https://doi.org/10.1016/j.jaecs.2021.100033)
