@@ -6,9 +6,8 @@ used for modelling liquid wall film phase-change in multi-region cases.
 
 Port of the *standardPhaseChange* model from OpenFOAM-10.
 
-I created this model originally for my master's thesis, and I'm sharing it here in case somebody 
-finds it useful. The code still needs some clean-up, and has several limitations/inaccuracies, as
-listed in [Section 5](#5-known-limitations).  
+I created this model originally for my master's thesis, due to lack of film phase change models in OpenFOAM-11 and 12. I'm sharing this model here in case somebody 
+finds it useful. The code still needs some clean-up, and has several limitations/inaccuracies, as listed in [Section 5](#5-known-limitations).
 
 ## 1. Technical description
 
