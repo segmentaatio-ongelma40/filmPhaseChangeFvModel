@@ -16,3 +16,4 @@ paraFoam -touchAll
 # run case
 runParallel -a $(getApplication) || exit 2
 
+runApplication reconstructPar -allRegions
