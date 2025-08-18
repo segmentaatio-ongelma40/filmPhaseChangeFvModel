@@ -1,0 +1,22 @@
+# ignore time folders
+0.[0-9]*/
+[1-9]*/
+processor*/
+processors*/
+
+# ignore paraview files
+*.foam
+*.OpenFOAM
+
+# ignore logfiles
+log.*
+
+# ignore dynamicCode
+dynamicCode/
+
+# ignore mesh files
+constant/*/polyMesh/
+
+# ignore postProcessing files
+postProcessing/
+python/*.png
