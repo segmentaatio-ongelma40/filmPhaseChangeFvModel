@@ -48,7 +48,7 @@ See [OpenFOAM Repo: 1. Software for Compilation](https://openfoam.org/download/s
 for package list.
 2. Clone the repository to a directory (e.g., to /home/\<username\>/OpenFOAM/\<username\>-13/dev/).
 ```
-git clone https://github.com/segmentaatio-ongelma40/filmPhaseChangeFvModel.git
+git clone git@github.com:segmentaatio-ongelma40/filmPhaseChangeFvModel.git
 cd filmPhaseChangeFvModel/filmPhaseChangeToFluid
 ```
 3. Source the OpenFOAM environment (example using bash)
